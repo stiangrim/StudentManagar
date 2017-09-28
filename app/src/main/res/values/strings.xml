@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">StudentManager</string>
+    <string name="title_students">Students</string>
+    <string name="title_add_student">Add Student</string>
+    <string name="title_send_sms">Send SMS</string>
+    <string name="title_preferences">Preferences</string>
+    <string name="title_sms_history">SMS History</string>
+</resources>

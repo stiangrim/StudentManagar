@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    android:padding="10dp"
+    android:weightSum="1">
+
+    <ImageView
+        android:id="@+id/profile_list_image"
+        android:layout_width="40dp"
+        android:layout_height="50dp"
+        app:srcCompat="@mipmap/ic_account_circle_black_24dp" />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_weight="0.04"
+        android:orientation="vertical"
+        android:weightSum="1">
+
+        <TextView
+            android:id="@+id/profile_list_name"
+            android:layout_width="336dp"
+            android:layout_height="30dp"
+            android:paddingLeft="10dp"
+            android:textSize="20sp"
+            android:typeface="serif" />
+
+        <TextView
+            android:id="@+id/profile_list_number"
+            android:layout_width="338dp"
+            android:layout_height="20dp"
+            android:paddingLeft="10dp" />
+    </LinearLayout>
+</LinearLayout>

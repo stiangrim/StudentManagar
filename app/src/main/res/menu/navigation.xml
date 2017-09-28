@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/navigation_students"
+        android:icon="@drawable/ic_people_black_24dp"
+        android:title="@string/title_students" />
+
+    <item
+        android:id="@+id/navigation_add_student"
+        android:icon="@drawable/ic_person_add_black_24dp"
+        android:title="@string/title_add_student" />
+
+    <item
+        android:id="@+id/navigation_send_sms"
+        android:icon="@drawable/ic_mail_black_24dp"
+        android:title="@string/title_send_sms" />
+
+    <item
+        android:id="@+id/navigation_sms_history"
+        android:icon="@drawable/ic_history_black_24dp"
+        android:title="@string/title_sms_history" />
+
+
+    <item
+        android:id="@+id/navigation_preferences"
+        android:icon="@drawable/ic_settings_black_24dp"
+        android:title="@string/title_preferences" />
+
+</menu>
