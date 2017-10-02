@@ -1,8 +1,12 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 
@@ -11,8 +15,6 @@ import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomSt
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-import java.util.ArrayList;
 
 public class StudentsActivity extends AppCompatActivity {
 
@@ -37,8 +39,20 @@ public class StudentsActivity extends AppCompatActivity {
 
     private void setListView() {
         ListAdapter listAdapter = new CustomStudentAdapter(this, getStudents());
-        ListView studentsListView = (ListView) findViewById(R.id.students_list_view);
+        final ListView studentsListView = (ListView) findViewById(R.id.students_list_view);
+        final Context context = this;
+        studentsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+                Student student = (Student) studentsListView.getItemAtPosition(i);
+
+                Intent intent = new Intent(context, EditStudentActivity.class);
+                intent.putExtra("id", student.getId());
+                startActivity(intent);
+            }
+        });
         studentsListView.setAdapter(listAdapter);
+
     }
 
     private Student[] getStudents() {

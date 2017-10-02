@@ -21,13 +21,6 @@ public class Student {
         this.phoneNumber = phoneNumber;
     }
 
-    public Student(Long _id, String firstName, String lastName, String phoneNumber) {
-        this._id = _id;
-        this.firstName = firstName;
-        this.lastName = lastName;
-        this.phoneNumber = phoneNumber;
-    }
-
     public void setId(Long _id) {
         this._id = _id;
     }
@@ -44,7 +37,7 @@ public class Student {
         this.phoneNumber = phoneNumber;
     }
 
-    public Long get_id() {
+    public Long getId() {
         return _id;
     }
 

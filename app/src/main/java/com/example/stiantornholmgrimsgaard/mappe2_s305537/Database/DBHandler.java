@@ -63,6 +63,30 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public Student getStudent(Long id) {
+        Student student = new Student();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT * FROM " + STUDENT_TABLE_NAME + " WHERE " + STUDENT_ID + " = " + id + ";";
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                student.setId(cursor.getLong(0));
+                student.setFirstName(cursor.getString(1));
+                student.setLastName(cursor.getString(2));
+                student.setPhoneNumber(cursor.getString(3));
+            }
+            while (cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+        }
+
+        return student;
+    }
+
     public ArrayList<Student> getStudents() {
         ArrayList<Student> students = new ArrayList<>();
         SQLiteDatabase db = this.getWritableDatabase();
@@ -87,5 +111,22 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return students;
+    }
+
+    public void updateStudent(Student student) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(STUDENT_FIRST_NAME, student.getFirstName());
+        contentValues.put(STUDENT_LAST_NAME, student.getLastName());
+        contentValues.put(STUDENT_PHONE_NUMBER, student.getPhoneNumber());
+
+        db.update(STUDENT_TABLE_NAME, contentValues, STUDENT_ID + " =? ", new String[]{String.valueOf(student.getId())});
+        db.close();
+    }
+
+    public void deleteStudent(Long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(STUDENT_TABLE_NAME, STUDENT_ID + " =? ", new String[]{Long.toString(id)});
+        db.close();
     }
 }

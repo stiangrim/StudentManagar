@@ -2,6 +2,10 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.stiantornholmgrimsgaard.mappe2_s305537">
 
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SEND_SMS" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -21,7 +25,8 @@
         <activity android:name=".Party.AddStudentActivity" />
         <activity android:name=".SMS.SendSMSActivity" />
         <activity android:name=".Preferences.PreferencesActivity" />
-        <activity android:name=".SMS.SMSHistory"></activity>
+        <activity android:name=".SMS.SMSHistory" />
+        <activity android:name=".Party.EditStudentActivity"></activity>
     </application>
 
 </manifest>

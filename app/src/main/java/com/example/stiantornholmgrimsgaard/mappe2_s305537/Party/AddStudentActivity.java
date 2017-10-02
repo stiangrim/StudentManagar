@@ -1,5 +1,6 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -39,9 +40,12 @@ public class AddStudentActivity extends AppCompatActivity {
         String lastName = ((EditText) findViewById(R.id.last_name_edit_text)).getText().toString();
         String phoneNumber = ((EditText) findViewById(R.id.phone_number_edit_text)).getText().toString();
 
-        if(!firstName.isEmpty() && !lastName.isEmpty() && !phoneNumber.isEmpty()) {
+        if (!firstName.isEmpty() && !lastName.isEmpty() && !phoneNumber.isEmpty()) {
             Student student = new Student(firstName, lastName, phoneNumber);
             dbHandler.addStudent(student);
+
+            Intent intent = new Intent(this, StudentsActivity.class);
+            startActivity(intent);
         }
     }
 }
