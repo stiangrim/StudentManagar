@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    tools:context="com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistory">
+    tools:context="com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistoryActivity">
 
     <FrameLayout
         android:id="@+id/content"

@@ -11,7 +11,7 @@ import android.view.MenuItem;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.AddStudentActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Preferences.PreferencesActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistory;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistoryActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SendSMSActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.StudentsActivity;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -61,7 +61,7 @@ public class BottomNavigationViewHelper {
                         context.startActivity(intent);
                         return true;
                     case R.id.navigation_sms_history:
-                        intent = new Intent(context, SMSHistory.class);
+                        intent = new Intent(context, SMSHistoryActivity.class);
                         context.startActivity(intent);
                         return true;
                     case R.id.navigation_preferences:

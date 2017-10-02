@@ -8,8 +8,11 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.util.Log;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMS;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 
 /**
  * Created by stiantornholmgrimsgaard on 25.09.2017.
@@ -19,7 +22,7 @@ public class DBHandler extends SQLiteOpenHelper {
 
     private static final String TAG = "DBHandler";
 
-    private static final int DATABASE_VERSION = 2;
+    private static final int DATABASE_VERSION = 3;
     private static final String DATABASE_NAME = "studentmanager.db";
 
     private static final String STUDENT_TABLE_NAME = "Student";
@@ -28,6 +31,11 @@ public class DBHandler extends SQLiteOpenHelper {
     private static final String STUDENT_LAST_NAME = "lastName";
     private static final String STUDENT_PHONE_NUMBER = "phoneNumber";
 
+    private static final String SMS_TABLE_NAME = "Sms";
+    private static final String SMS_ID = "_id";
+    private static final String SMS_DATE = "date";
+    private static final String SMS_MESSAGE = "message";
+
 
     public DBHandler(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -35,21 +43,92 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String sql = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
+        String studentSql = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
                 STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
                 STUDENT_FIRST_NAME + " TEXT," +
                 STUDENT_LAST_NAME + " TEXT," +
                 STUDENT_PHONE_NUMBER + " TEXT" +
                 ");";
 
-        Log.d(TAG, sql);
-        db.execSQL(sql);
+        Log.d(TAG, studentSql);
+        db.execSQL(studentSql);
+
+        String smsSql = "CREATE TABLE " + SMS_TABLE_NAME + "(" +
+                SMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+                SMS_DATE + " INTEGER," +
+                SMS_MESSAGE + " TEXT" +
+                ");";
+
+        Log.d(TAG, smsSql);
+        db.execSQL(smsSql);
+
+
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         db.execSQL("DROP TABLE IF EXISTS " + STUDENT_TABLE_NAME);
+        db.execSQL("DROP TABLE IF EXISTS " + SMS_TABLE_NAME);
         onCreate(db);
+    }
+
+    public void addSMS(SMS sms) {
+
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SMS_DATE, sms.getDate());
+        contentValues.put(SMS_MESSAGE, sms.getMessage());
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.insert(SMS_TABLE_NAME, null, contentValues);
+        db.close();
+    }
+
+    public ArrayList<SMS> getSMS() {
+        ArrayList<SMS> smsArrayList = new ArrayList<>();
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        String sql = "SELECT * FROM " + SMS_TABLE_NAME + ";";
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                SMS sms = new SMS();
+                sms.setId(cursor.getLong(0));
+                sms.setDate(cursor.getLong(1));
+                sms.setMessage(cursor.getString(2));
+                smsArrayList.add(sms);
+            }
+            while (cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+        }
+
+        return smsArrayList;
+    }
+
+    public SMS getSMS(Long id) {
+        SMS sms = new SMS();
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        String sql = "SELECT * FROM " + SMS_TABLE_NAME + " WHERE " + SMS_ID + " = " + id + ";";
+
+        Cursor cursor = db.rawQuery(sql, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                sms.setId(cursor.getLong(0));
+                sms.setDate(cursor.getLong(1));
+                sms.setMessage(cursor.getString(2));
+            }
+            while (cursor.moveToNext());
+
+            cursor.close();
+            db.close();
+        }
+
+        return sms;
     }
 
     public void addStudent(Student student) {

@@ -8,6 +8,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -18,9 +19,14 @@ import android.view.View;
 import android.widget.EditText;
 import android.widget.Toast;
 
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.StudentsActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import java.util.ArrayList;
 
 public class SendSMSActivity extends AppCompatActivity {
 
@@ -34,6 +40,7 @@ public class SendSMSActivity extends AppCompatActivity {
     PendingIntent deliveredPendingIntent;
     BroadcastReceiver smsSentReceiver;
     BroadcastReceiver smsDeliveredReceiver;
+    DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -42,9 +49,6 @@ public class SendSMSActivity extends AppCompatActivity {
         Log.d(TAG, "onCreate: starting");
 
         setupBottomNavigationView();
-
-        sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
-        deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
     }
 
     private void setupBottomNavigationView() {
@@ -54,23 +58,45 @@ public class SendSMSActivity extends AppCompatActivity {
     }
 
     public void sendSMS(View view) {
-        EditText editTextSmsContent = (EditText) findViewById(R.id.sms_content_edit_text);
-
-        String message = editTextSmsContent.getText().toString();
-        String phoneNumber = "91695807";
-
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
         } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
         } else {
-            SmsManager smsManager = SmsManager.getDefault();
-            smsManager.sendTextMessage(phoneNumber, null, message, sentPendingIntent, deliveredPendingIntent);
+            String message = ((EditText) findViewById(R.id.sms_content_edit_text)).getText().toString();
+            if (!message.isEmpty()) {
+                SmsManager smsManager = SmsManager.getDefault();
+                sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
+                deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
+                dbHandler = new DBHandler(this);
+
+                sendSMSToAllStudents(smsManager, message);
+                saveSMSInDatabase(message);
+            } else {
+                Toast.makeText(this, "Your message can not be empty", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private void saveSMSInDatabase(String message) {
+        DBHandler dbHandler = new DBHandler(this);
+
+        Long date = System.currentTimeMillis();
+
+        SMS sms = new SMS(date, message);
+        dbHandler.addSMS(sms);
+    }
+
+    private void sendSMSToAllStudents(SmsManager smsManager, String message) {
+        ArrayList<Student> students = dbHandler.getStudents();
+
+        for (Student student : students) {
+            smsManager.sendTextMessage(student.getPhoneNumber(), null, message, sentPendingIntent, deliveredPendingIntent);
         }
     }
 
     @Override
-    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+    public void onRequestPermissionsResult(int requestCode, @NonNull String permissions[], @NonNull int[] grantResults) {
         switch (requestCode) {
             case MY_PERMISSIONS_REQUEST_SEND_SMS: {
                 if (grantResults.length > 0

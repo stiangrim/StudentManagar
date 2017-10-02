@@ -25,8 +25,9 @@
         <activity android:name=".Party.AddStudentActivity" />
         <activity android:name=".SMS.SendSMSActivity" />
         <activity android:name=".Preferences.PreferencesActivity" />
-        <activity android:name=".SMS.SMSHistory" />
-        <activity android:name=".Party.EditStudentActivity"></activity>
+        <activity android:name=".SMS.SMSHistoryActivity" />
+        <activity android:name=".Party.EditStudentActivity" />
+        <activity android:name=".SMS.SMSViewActivity"></activity>
     </application>
 
 </manifest>
