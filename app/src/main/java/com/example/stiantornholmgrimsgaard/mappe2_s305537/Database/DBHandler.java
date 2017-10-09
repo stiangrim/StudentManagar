@@ -20,21 +20,31 @@ import java.util.Date;
 
 public class DBHandler extends SQLiteOpenHelper {
 
+    public static final int DATABASE_VERSION = 4;
+    public static final String DATABASE_NAME = "studentmanager.db";
+    public static final String STUDENT_TABLE_NAME = "Student";
+    public static final String STUDENT_ID = "_id";
+    public static final String STUDENT_FIRST_NAME = "firstName";
+    public static final String STUDENT_LAST_NAME = "lastName";
+    public static final String STUDENT_PHONE_NUMBER = "phoneNumber";
+    public static final String SMS_TABLE_NAME = "Sms";
+    public static final String SMS_ID = "_id";
+    public static final String SMS_DATE = "date";
+    public static final String SMS_MESSAGE = "message";
+    public static final String SMS_SENT = "sent";
+    public static final String CREATE_STUDENT_TABLE = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
+            STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            STUDENT_FIRST_NAME + " TEXT," +
+            STUDENT_LAST_NAME + " TEXT," +
+            STUDENT_PHONE_NUMBER + " TEXT" +
+            ");";
+    public static final String CREATE_SMS_TABLE = "CREATE TABLE " + SMS_TABLE_NAME + "(" +
+            SMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
+            SMS_DATE + " INTEGER," +
+            SMS_MESSAGE + " TEXT," +
+            SMS_SENT + " INTEGER" +
+            ");";
     private static final String TAG = "DBHandler";
-
-    private static final int DATABASE_VERSION = 3;
-    private static final String DATABASE_NAME = "studentmanager.db";
-
-    private static final String STUDENT_TABLE_NAME = "Student";
-    private static final String STUDENT_ID = "_id";
-    private static final String STUDENT_FIRST_NAME = "firstName";
-    private static final String STUDENT_LAST_NAME = "lastName";
-    private static final String STUDENT_PHONE_NUMBER = "phoneNumber";
-
-    private static final String SMS_TABLE_NAME = "Sms";
-    private static final String SMS_ID = "_id";
-    private static final String SMS_DATE = "date";
-    private static final String SMS_MESSAGE = "message";
 
 
     public DBHandler(Context context) {
@@ -43,26 +53,11 @@ public class DBHandler extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        String studentSql = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
-                STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                STUDENT_FIRST_NAME + " TEXT," +
-                STUDENT_LAST_NAME + " TEXT," +
-                STUDENT_PHONE_NUMBER + " TEXT" +
-                ");";
+        Log.d(TAG, CREATE_STUDENT_TABLE);
+        db.execSQL(CREATE_STUDENT_TABLE);
 
-        Log.d(TAG, studentSql);
-        db.execSQL(studentSql);
-
-        String smsSql = "CREATE TABLE " + SMS_TABLE_NAME + "(" +
-                SMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
-                SMS_DATE + " INTEGER," +
-                SMS_MESSAGE + " TEXT" +
-                ");";
-
-        Log.d(TAG, smsSql);
-        db.execSQL(smsSql);
-
-
+        Log.d(TAG, CREATE_SMS_TABLE);
+        db.execSQL(CREATE_SMS_TABLE);
     }
 
     @Override
@@ -73,10 +68,10 @@ public class DBHandler extends SQLiteOpenHelper {
     }
 
     public void addSMS(SMS sms) {
-
         ContentValues contentValues = new ContentValues();
         contentValues.put(SMS_DATE, sms.getDate());
         contentValues.put(SMS_MESSAGE, sms.getMessage());
+        contentValues.put(SMS_SENT, sms.isSent());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(SMS_TABLE_NAME, null, contentValues);
@@ -97,6 +92,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 sms.setId(cursor.getLong(0));
                 sms.setDate(cursor.getLong(1));
                 sms.setMessage(cursor.getString(2));
+                if (cursor.getInt(3) == 0) {
+                    sms.setSent(false);
+                } else if (cursor.getInt(3) == 1) {
+                    sms.setSent(true);
+                }
                 smsArrayList.add(sms);
             }
             while (cursor.moveToNext());
@@ -121,6 +121,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 sms.setId(cursor.getLong(0));
                 sms.setDate(cursor.getLong(1));
                 sms.setMessage(cursor.getString(2));
+                if (cursor.getInt(3) == 0) {
+                    sms.setSent(false);
+                } else if (cursor.getInt(3) == 1) {
+                    sms.setSent(true);
+                }
             }
             while (cursor.moveToNext());
 
@@ -129,6 +134,17 @@ public class DBHandler extends SQLiteOpenHelper {
         }
 
         return sms;
+    }
+
+    public void setSMSToSent(SMS sms) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SMS_MESSAGE, sms.getMessage());
+        contentValues.put(SMS_DATE, sms.getDate());
+        contentValues.put(SMS_SENT, 1);
+
+        db.update(SMS_TABLE_NAME, contentValues, SMS_ID + " =? ", new String[]{String.valueOf(sms.getId())});
+        db.close();
     }
 
     public void addStudent(Student student) {

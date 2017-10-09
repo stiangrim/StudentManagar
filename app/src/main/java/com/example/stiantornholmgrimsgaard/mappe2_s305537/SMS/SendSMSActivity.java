@@ -2,7 +2,10 @@ package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.PendingIntent;
+import android.app.DatePickerDialog;
+import android.app.Dialog;
+import android.app.DialogFragment;
+import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -14,19 +17,24 @@ import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.TimePicker;
 import android.widget.Toast;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.StudentsActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import java.util.ArrayList;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 
 public class SendSMSActivity extends AppCompatActivity {
 
@@ -34,13 +42,12 @@ public class SendSMSActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 2;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
-    private static final String SENT = "SMS_SENT";
-    private static final String DELIVERED = "SMS_DELIVERED";
-    PendingIntent sentPendingIntent;
-    PendingIntent deliveredPendingIntent;
+    private static final int MY_PERMISSIONS_RECEIVE_BOOT_COMPLETED = 3;
+
+    private static long time = 0L;
+
     BroadcastReceiver smsSentReceiver;
     BroadcastReceiver smsDeliveredReceiver;
-    DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -57,21 +64,30 @@ public class SendSMSActivity extends AppCompatActivity {
         BottomNavigationViewHelper.setupBottomNavigationView(SendSMSActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
+    public void showDateAndTimePickerDialog(View view) {
+        DialogFragment dialogFragment = new DatePickerFragment();
+        dialogFragment.show(getFragmentManager(), "datePicker");
+    }
+
     public void sendSMS(View view) {
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
         } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
+        } else if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_GRANTED) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, MY_PERMISSIONS_RECEIVE_BOOT_COMPLETED);
         } else {
             String message = ((EditText) findViewById(R.id.sms_content_edit_text)).getText().toString();
-            if (!message.isEmpty()) {
-                SmsManager smsManager = SmsManager.getDefault();
-                sentPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(SENT), 0);
-                deliveredPendingIntent = PendingIntent.getBroadcast(this, 0, new Intent(DELIVERED), 0);
-                dbHandler = new DBHandler(this);
 
-                sendSMSToAllStudents(smsManager, message);
-                saveSMSInDatabase(message);
+            if (!message.isEmpty()) {
+                if (time != 0L) {
+                    saveSMSInDatabase(message);
+
+                    Intent smsHistoryIntent = new Intent(SendSMSActivity.this, SMSHistoryActivity.class);
+                    startActivity(smsHistoryIntent);
+                } else {
+                    Toast.makeText(this, "You need to set the time", Toast.LENGTH_SHORT).show();
+                }
             } else {
                 Toast.makeText(this, "Your message can not be empty", Toast.LENGTH_SHORT).show();
             }
@@ -80,19 +96,8 @@ public class SendSMSActivity extends AppCompatActivity {
 
     private void saveSMSInDatabase(String message) {
         DBHandler dbHandler = new DBHandler(this);
-
-        Long date = System.currentTimeMillis();
-
-        SMS sms = new SMS(date, message);
+        SMS sms = new SMS(time, message, false);
         dbHandler.addSMS(sms);
-    }
-
-    private void sendSMSToAllStudents(SmsManager smsManager, String message) {
-        ArrayList<Student> students = dbHandler.getStudents();
-
-        for (Student student : students) {
-            smsManager.sendTextMessage(student.getPhoneNumber(), null, message, sentPendingIntent, deliveredPendingIntent);
-        }
     }
 
     @Override
@@ -162,7 +167,113 @@ public class SendSMSActivity extends AppCompatActivity {
             }
         };
 
-        registerReceiver(smsSentReceiver, new IntentFilter(SENT));
-        registerReceiver(smsDeliveredReceiver, new IntentFilter(DELIVERED));
+        registerReceiver(smsSentReceiver, new IntentFilter(SMSService.SENT));
+        registerReceiver(smsDeliveredReceiver, new IntentFilter(SMSService.DELIVERED));
+    }
+
+    public static class DatePickerFragment extends DialogFragment
+            implements DatePickerDialog.OnDateSetListener {
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Use the current date as the default date in the picker
+            final Calendar c = Calendar.getInstance();
+            int year = c.get(Calendar.YEAR);
+            int month = c.get(Calendar.MONTH);
+            int day = c.get(Calendar.DAY_OF_MONTH);
+
+            // Create a new instance of DatePickerDialog and return it
+            DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
+            datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            return datePickerDialog;
+        }
+
+        public void onDateSet(DatePicker view, int year, int month, int day) {
+            // Do something with the date chosen by the user
+            Bundle args = new Bundle();
+            args.putInt("year", year);
+            // DatePickerDialog's Month index starts at 0.
+            args.putInt("month", month + 1);
+            args.putInt("day", day);
+
+            DialogFragment dialogFragment = new TimePickerFragment();
+            dialogFragment.setArguments(args);
+            dialogFragment.show(getFragmentManager(), "timePicker");
+        }
+    }
+
+    public static class TimePickerFragment extends DialogFragment
+            implements TimePickerDialog.OnTimeSetListener {
+
+        int year;
+        int month;
+        int day;
+
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            // Get Date from DatePickerDialog
+            this.year = getArguments().getInt("year");
+            this.month = getArguments().getInt("month");
+            this.day = getArguments().getInt("day");
+
+            // Use the current time as the default values for the picker
+            final Calendar c = Calendar.getInstance();
+            int hour = c.get(Calendar.HOUR_OF_DAY);
+            int minute = c.get(Calendar.MINUTE);
+
+            // Create a new instance of TimePickerDialog and return it
+            return new TimePickerDialog(getActivity(), this, hour, minute,
+                    DateFormat.is24HourFormat(getActivity()));
+        }
+
+        public void onTimeSet(TimePicker view, int hourOfDay, int minute) {
+            // Do something with the time chosen by the user
+
+            SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmm");
+            SimpleDateFormat sdfButton = new SimpleDateFormat("dd-MM-YY HH:mm");
+
+            try {
+                String dateString = getDateString(hourOfDay, minute);
+                Date date = sdf.parse(dateString);
+                time = date.getTime();
+
+                Button sendSmsButton = getActivity().findViewById(R.id.send_sms_button);
+                sendSmsButton.setAlpha(1);
+                sendSmsButton.setEnabled(true);
+
+                Date buttonDate = new Date(time);
+                Button setDateAndTimeButton = getActivity().findViewById(R.id.set_date_and_time_button);
+                setDateAndTimeButton.setText(sdfButton.format(buttonDate));
+
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
+        }
+
+        private String getDateString(int hour, int minute) {
+            StringBuilder dateString = new StringBuilder();
+
+            String dayString = Integer.toString(day);
+            String monthString = Integer.toString(month);
+            String yearString = Integer.toString(year);
+            String hourString = Integer.toString(hour);
+            String minuteString = Integer.toString(minute);
+
+            if (dayString.length() < 2) {
+                dayString = "0" + dayString;
+            }
+            if (monthString.length() < 2) {
+                monthString = "0" + monthString;
+            }
+            if (hourString.length() < 2) {
+                hourString = "0" + hourString;
+            }
+            if (minuteString.length() < 2) {
+                minuteString = "0" + minuteString;
+            }
+
+            dateString.append(dayString).append(monthString).append(yearString).append(hourString).append(minuteString);
+            return dateString.toString();
+        }
     }
 }

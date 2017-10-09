@@ -1,7 +1,9 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
+import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
@@ -21,14 +23,33 @@ public class StudentsActivity extends AppCompatActivity {
     private static final String TAG = "StudentsActivity";
     private static final int ACTIVITY_NUM = 0;
 
+
+    public static String PROVIDER = "com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider.StudentProvider";
+    public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/studentManager");
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students);
         Log.d(TAG, "onCreate: starting");
 
+        // Insert contentValues using StudentProvider
+        /*ContentValues contentValues = new ContentValues();
+        contentValues.put("firstName", "Test");
+        contentValues.put("lastName", "Testesen");
+        contentValues.put("phoneNumber", "91695807");
+        getContentResolver().insert(CONTENT_URI, contentValues);*/
+
+
+        startBroadcastReceiver();
         setupBottomNavigationView();
         setListView();
+    }
+
+    private void startBroadcastReceiver() {
+        Intent intent = new Intent();
+        intent.setAction("com.example.stiantornholmgrimsgaard.mappe2_s305537.SMSBroadcastReceiver");
+        sendBroadcast(intent);
     }
 
     private void setupBottomNavigationView() {

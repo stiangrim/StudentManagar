@@ -13,4 +13,7 @@
     <string name="update">Update</string>
     <string name="delete">Delete</string>
     <string name="add_student">Add Student</string>
+    <string name="set_time">Set Time</string>
+    <string name="set_date">Set Date</string>
+    <string name="set_date_and_time">Set Date And Time</string>
 </resources>

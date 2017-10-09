@@ -1,7 +1,9 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
@@ -17,6 +19,9 @@ import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomSM
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
+
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class SMSHistoryActivity extends AppCompatActivity {
 
@@ -42,18 +47,33 @@ public class SMSHistoryActivity extends AppCompatActivity {
     private void setListView() {
         ListAdapter listAdapter = new CustomSMSHistoryAdapter(this, getSMS());
         final ListView smsListView = (ListView) findViewById(R.id.sms_history_list_view);
-        final Context context = this;
         smsListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 SMS sms = (SMS) smsListView.getItemAtPosition(i);
-
-                Intent intent = new Intent(context, SMSViewActivity.class);
-                intent.putExtra("id", sms.getId());
-                startActivity(intent);
+                showSMSDialog(sms);
             }
         });
         smsListView.setAdapter(listAdapter);
+    }
+
+    private void showSMSDialog(SMS sms) {
+        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy HH:mm");
+        Date resultDate = new Date(sms.getDate());
+
+        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
+
+        builder.setMessage(sms.getMessage())
+                .setTitle(sdf.format(resultDate))
+                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                    @Override
+                    public void onClick(DialogInterface dialogInterface, int i) {
+                        dialogInterface.cancel();
+                    }
+                });
+
+        AlertDialog alertDialog = builder.create();
+        alertDialog.show();
     }
 
     private SMS[] getSMS() {

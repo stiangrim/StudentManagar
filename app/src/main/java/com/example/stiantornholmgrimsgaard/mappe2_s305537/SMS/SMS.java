@@ -11,20 +11,23 @@ public class SMS {
     private Long _id;
     private Long date;
     private String message;
+    private boolean sent;
 
     public SMS() {
 
     }
 
-    public SMS(Long date, String message) {
+    public SMS(Long date, String message, boolean sent) {
         this.date = date;
         this.message = message;
+        this.sent = sent;
     }
 
-    public SMS(Long _id, Long date, String message) {
+    public SMS(Long _id, Long date, String message, boolean sent) {
         this._id = _id;
         this.date = date;
         this.message = message;
+        this.sent = sent;
     }
 
     public Long getId() {
@@ -49,5 +52,13 @@ public class SMS {
 
     public void setMessage(String message) {
         this.message = message;
+    }
+
+    public boolean isSent() {
+        return sent;
+    }
+
+    public void setSent(boolean sent) {
+        this.sent = sent;
     }
 }

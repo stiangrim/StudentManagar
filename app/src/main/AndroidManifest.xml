@@ -5,6 +5,10 @@
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+    <uses-permission android:name="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+
+    <permission android:name="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider" />
 
     <application
         android:allowBackup="true"
@@ -27,7 +31,28 @@
         <activity android:name=".Preferences.PreferencesActivity" />
         <activity android:name=".SMS.SMSHistoryActivity" />
         <activity android:name=".Party.EditStudentActivity" />
-        <activity android:name=".SMS.SMSViewActivity"></activity>
+
+        <service android:name=".SMS.SMSService" />
+        <service android:name=".SMS.SetPeriodicSMSService" />
+
+        <receiver android:name=".SMS.SMSBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.stiantornholmgrimsgaard.mappe2_s305537.SMSBroadcastReceiver" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
+
+        <provider
+            android:name=".ContentProvider.StudentProvider"
+            android:authorities="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider.StudentProvider"
+            android:enabled="true"
+            android:exported="true"
+            android:grantUriPermissions="true"
+            android:multiprocess="true"
+            android:readPermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider"
+            android:writePermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider">
+        </provider>
+
     </application>
 
 </manifest>
