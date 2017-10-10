@@ -10,9 +10,7 @@ import android.util.Log;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMS;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
 
 /**
  * Created by stiantornholmgrimsgaard on 25.09.2017.
@@ -20,7 +18,7 @@ import java.util.Date;
 
 public class DBHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 4;
+    public static final int DATABASE_VERSION = 5;
     public static final String DATABASE_NAME = "studentmanager.db";
     public static final String STUDENT_TABLE_NAME = "Student";
     public static final String STUDENT_ID = "_id";
@@ -31,7 +29,8 @@ public class DBHandler extends SQLiteOpenHelper {
     public static final String SMS_ID = "_id";
     public static final String SMS_DATE = "date";
     public static final String SMS_MESSAGE = "message";
-    public static final String SMS_SENT = "sent";
+    public static final String SMS_IS_SENT = "is_sent";
+    public static final String SMS_IS_WEEKLY = "is_weekly";
     public static final String CREATE_STUDENT_TABLE = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
             STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             STUDENT_FIRST_NAME + " TEXT," +
@@ -42,7 +41,8 @@ public class DBHandler extends SQLiteOpenHelper {
             SMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             SMS_DATE + " INTEGER," +
             SMS_MESSAGE + " TEXT," +
-            SMS_SENT + " INTEGER" +
+            SMS_IS_SENT + " INTEGER," +
+            SMS_IS_WEEKLY + " INTEGER" +
             ");";
     private static final String TAG = "DBHandler";
 
@@ -71,7 +71,8 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SMS_DATE, sms.getDate());
         contentValues.put(SMS_MESSAGE, sms.getMessage());
-        contentValues.put(SMS_SENT, sms.isSent());
+        contentValues.put(SMS_IS_SENT, sms.isSent());
+        contentValues.put(SMS_IS_WEEKLY, sms.isWeekly());
 
         SQLiteDatabase db = this.getWritableDatabase();
         db.insert(SMS_TABLE_NAME, null, contentValues);
@@ -96,6 +97,11 @@ public class DBHandler extends SQLiteOpenHelper {
                     sms.setSent(false);
                 } else if (cursor.getInt(3) == 1) {
                     sms.setSent(true);
+                }
+                if (cursor.getInt(4) == 0) {
+                    sms.setWeekly(false);
+                } else if (cursor.getInt(4) == 1) {
+                    sms.setWeekly(true);
                 }
                 smsArrayList.add(sms);
             }
@@ -126,6 +132,11 @@ public class DBHandler extends SQLiteOpenHelper {
                 } else if (cursor.getInt(3) == 1) {
                     sms.setSent(true);
                 }
+                if (cursor.getInt(4) == 0) {
+                    sms.setWeekly(false);
+                } else if (cursor.getInt(4) == 1) {
+                    sms.setWeekly(true);
+                }
             }
             while (cursor.moveToNext());
 
@@ -141,9 +152,32 @@ public class DBHandler extends SQLiteOpenHelper {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SMS_MESSAGE, sms.getMessage());
         contentValues.put(SMS_DATE, sms.getDate());
-        contentValues.put(SMS_SENT, 1);
+        contentValues.put(SMS_IS_SENT, 1);
+        contentValues.put(SMS_IS_WEEKLY, sms.isWeekly());
 
         db.update(SMS_TABLE_NAME, contentValues, SMS_ID + " =? ", new String[]{String.valueOf(sms.getId())});
+        db.close();
+    }
+
+    public void updateSMS(SMS sms) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put(SMS_DATE, sms.getDate());
+        contentValues.put(SMS_MESSAGE, sms.getMessage());
+        contentValues.put(SMS_IS_SENT, sms.isSent());
+        contentValues.put(SMS_IS_WEEKLY, sms.isWeekly());
+
+        db.update(SMS_TABLE_NAME, contentValues, SMS_ID + " =? ", new String[]{String.valueOf(sms.getId())});
+        db.close();
+    }
+
+    public void deletePendingWeeklySMS() {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        int smsIsWeekly = 1;
+        int smsIsSent = 0;
+
+        db.delete(SMS_TABLE_NAME, SMS_IS_WEEKLY + " =? AND " + SMS_IS_SENT + "=?", new String[]{Integer.toString(smsIsWeekly), Integer.toString(smsIsSent)});
         db.close();
     }
 

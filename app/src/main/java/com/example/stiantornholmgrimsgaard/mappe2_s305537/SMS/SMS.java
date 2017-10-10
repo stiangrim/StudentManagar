@@ -1,7 +1,5 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
-import java.util.Date;
-
 /**
  * Created by stiantornholmgrimsgaard on 02.10.2017.
  */
@@ -11,23 +9,26 @@ public class SMS {
     private Long _id;
     private Long date;
     private String message;
-    private boolean sent;
+    private boolean isSent;
+    private boolean isWeekly;
 
     public SMS() {
 
     }
 
-    public SMS(Long date, String message, boolean sent) {
+    public SMS(Long date, String message, boolean isSent, boolean isWeekly) {
         this.date = date;
         this.message = message;
-        this.sent = sent;
+        this.isSent = isSent;
+        this.isWeekly = isWeekly;
     }
 
-    public SMS(Long _id, Long date, String message, boolean sent) {
+    public SMS(Long _id, Long date, String message, boolean isSent, boolean isWeekly) {
         this._id = _id;
         this.date = date;
         this.message = message;
-        this.sent = sent;
+        this.isSent = isSent;
+        this.isWeekly = isWeekly;
     }
 
     public Long getId() {
@@ -55,10 +56,18 @@ public class SMS {
     }
 
     public boolean isSent() {
-        return sent;
+        return isSent;
     }
 
     public void setSent(boolean sent) {
-        this.sent = sent;
+        this.isSent = sent;
+    }
+
+    public boolean isWeekly() {
+        return isWeekly;
+    }
+
+    public void setWeekly(boolean isWeekly) {
+        this.isWeekly = isWeekly;
     }
 }

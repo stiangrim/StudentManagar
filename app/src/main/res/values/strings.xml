@@ -16,4 +16,19 @@
     <string name="set_time">Set Time</string>
     <string name="set_date">Set Date</string>
     <string name="set_date_and_time">Set Date And Time</string>
+    <string name="enable_broadcast_of_sms">Enable broadcast of SMS</string>
+    <string name="enable_weekly_sms">Enable weekly SMS</string>
+    <string name="select_time">Select Time</string>
+    <string name="weekly_sms_content">Weekly SMS Content</string>
+    <string name="save_weekly_sms">Save Weekly SMS</string>
+    <string name="saved">Saved</string>
+    <string name="you_need_to_set_the_time">You need to set the time</string>
+    <string name="your_message_cant_not_be_empty">Your message can not be empty</string>
+    <string name="sms_sent">SMS sent!</string>
+    <string name="generic_failure">Generic failure!</string>
+    <string name="no_service">No service!</string>
+    <string name="null_pdu">Null PDU!</string>
+    <string name="radio_off">Radio off!</string>
+    <string name="sms_delivered">SMS delivered!</string>
+    <string name="sms_not_delivered">SMS not delivered!</string>
 </resources>

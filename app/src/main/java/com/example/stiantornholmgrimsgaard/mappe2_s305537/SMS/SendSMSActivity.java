@@ -26,6 +26,7 @@ import android.widget.EditText;
 import android.widget.TimePicker;
 import android.widget.Toast;
 
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Broadcast.SMSService;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
@@ -86,17 +87,17 @@ public class SendSMSActivity extends AppCompatActivity {
                     Intent smsHistoryIntent = new Intent(SendSMSActivity.this, SMSHistoryActivity.class);
                     startActivity(smsHistoryIntent);
                 } else {
-                    Toast.makeText(this, "You need to set the time", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(this, R.string.you_need_to_set_the_time, Toast.LENGTH_SHORT).show();
                 }
             } else {
-                Toast.makeText(this, "Your message can not be empty", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, R.string.your_message_cant_not_be_empty, Toast.LENGTH_SHORT).show();
             }
         }
     }
 
     private void saveSMSInDatabase(String message) {
         DBHandler dbHandler = new DBHandler(this);
-        SMS sms = new SMS(time, message, false);
+        SMS sms = new SMS(time, message, false, false);
         dbHandler.addSMS(sms);
     }
 
@@ -135,19 +136,19 @@ public class SendSMSActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(SendSMSActivity.this, "SMS sent!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.sms_sent, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_GENERIC_FAILURE:
-                        Toast.makeText(SendSMSActivity.this, "Generic failure!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.generic_failure, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NO_SERVICE:
-                        Toast.makeText(SendSMSActivity.this, "No service!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.no_service, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_NULL_PDU:
-                        Toast.makeText(SendSMSActivity.this, "Null PDU!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.null_pdu, Toast.LENGTH_SHORT).show();
                         break;
                     case SmsManager.RESULT_ERROR_RADIO_OFF:
-                        Toast.makeText(SendSMSActivity.this, "Radio off!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.radio_off, Toast.LENGTH_SHORT).show();
                         break;
                 }
             }
@@ -158,10 +159,10 @@ public class SendSMSActivity extends AppCompatActivity {
             public void onReceive(Context context, Intent intent) {
                 switch (getResultCode()) {
                     case Activity.RESULT_OK:
-                        Toast.makeText(SendSMSActivity.this, "SMS delivered!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.sms_delivered, Toast.LENGTH_SHORT).show();
                         break;
                     case Activity.RESULT_CANCELED:
-                        Toast.makeText(SendSMSActivity.this, "SMS not delivered!", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(SendSMSActivity.this, R.string.sms_not_delivered, Toast.LENGTH_SHORT).show();
                         break;
                 }
             }

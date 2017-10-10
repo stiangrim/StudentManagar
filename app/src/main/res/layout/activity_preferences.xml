@@ -24,17 +24,106 @@
             android:background="@color/colorLayoutBackground">
 
             <Switch
-                android:id="@+id/automatic_sms_switch"
-                android:layout_width="wrap_content"
-                android:textSize="20sp"
-                android:layout_height="wrap_content"
-                android:text="Automatic SMS"
-                app:layout_constraintTop_toTopOf="parent"
-                android:layout_marginTop="50dp"
-                android:layout_marginRight="8dp"
-                app:layout_constraintRight_toRightOf="parent"
+                android:id="@+id/weekly_sms_switch"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
                 android:layout_marginLeft="8dp"
-                app:layout_constraintLeft_toLeftOf="parent" />
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/border"
+                android:elevation="2dp"
+                android:text="@string/enable_weekly_sms"
+                android:textSize="20sp"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/broadcast_of_sms_switch" />
+
+            <Switch
+                android:id="@+id/broadcast_of_sms_switch"
+                android:layout_width="300dp"
+                android:layout_height="45dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="30dp"
+                android:background="@drawable/border"
+                android:elevation="2dp"
+                android:text="@string/enable_broadcast_of_sms"
+                android:textSize="20sp"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <Spinner
+                android:id="@+id/day_of_week_spinner"
+                android:layout_width="136dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/border"
+                android:elevation="2dp"
+                app:layout_constraintHorizontal_bias="0.13"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weekly_sms_switch" />
+
+            <Button
+                android:id="@+id/time_picker_button"
+                android:layout_width="136dp"
+                android:layout_height="45dp"
+                android:layout_marginLeft="27dp"
+                android:layout_marginTop="15dp"
+                android:background="@drawable/border"
+                android:onClick="openTimePickerDialog"
+                android:text="@string/select_time"
+                app:layout_constraintLeft_toRightOf="@+id/day_of_week_spinner"
+                app:layout_constraintTop_toBottomOf="@+id/weekly_sms_switch" />
+
+            <EditText
+                android:id="@+id/weekly_sms_content_edit_text"
+                android:layout_width="300dp"
+                android:layout_height="275dp"
+                android:layout_marginEnd="8dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="15dp"
+                android:layout_weight="0.04"
+                android:background="@drawable/border"
+                android:elevation="2dp"
+                android:ems="10"
+                android:gravity="start|end"
+                android:hint="@string/weekly_sms_content"
+                android:inputType="textMultiLine"
+                android:lineSpacingExtra="10dp"
+                android:padding="20dp"
+                android:textSize="16sp"
+                app:layout_constraintHorizontal_bias="0.509"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/day_of_week_spinner" />
+
+            <Button
+                android:id="@+id/save_weekly_sms_button"
+                android:layout_width="300dp"
+                android:layout_height="50dp"
+                android:layout_marginLeft="8dp"
+                android:layout_marginRight="8dp"
+                android:layout_marginTop="15dp"
+                android:background="@color/colorBlue"
+                android:onClick="saveWeeklySMS"
+                android:text="@string/saved"
+                android:textColor="@color/colorWhite"
+                app:layout_constraintHorizontal_bias="0.49"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/weekly_sms_content_edit_text" />
 
         </android.support.constraint.ConstraintLayout>
 

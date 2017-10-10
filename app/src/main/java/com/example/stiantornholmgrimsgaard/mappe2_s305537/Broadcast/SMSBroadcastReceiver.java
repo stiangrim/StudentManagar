@@ -1,4 +1,4 @@
-package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
+package com.example.stiantornholmgrimsgaard.mappe2_s305537.Broadcast;
 
 import android.content.BroadcastReceiver;
 import android.content.Context;

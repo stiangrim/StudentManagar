@@ -32,10 +32,10 @@
         <activity android:name=".SMS.SMSHistoryActivity" />
         <activity android:name=".Party.EditStudentActivity" />
 
-        <service android:name=".SMS.SMSService" />
-        <service android:name=".SMS.SetPeriodicSMSService" />
+        <service android:name=".Broadcast.SMSService" />
+        <service android:name=".Broadcast.SetPeriodicSMSService" />
 
-        <receiver android:name=".SMS.SMSBroadcastReceiver">
+        <receiver android:name=".Broadcast.SMSBroadcastReceiver">
             <intent-filter>
                 <action android:name="com.example.stiantornholmgrimsgaard.mappe2_s305537.SMSBroadcastReceiver" />
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
