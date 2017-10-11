@@ -5,6 +5,8 @@ import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +43,16 @@ public class StudentsActivity extends AppCompatActivity {
         getContentResolver().insert(CONTENT_URI, contentValues);*/
 
 
+        FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_student_floating_button);
+        fab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(StudentsActivity.this, AddStudentActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         startBroadcastReceiver();
         setupBottomNavigationView();
         setListView();
@@ -55,7 +67,7 @@ public class StudentsActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(StudentsActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, StudentsActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     private void setListView() {
@@ -70,6 +82,7 @@ public class StudentsActivity extends AppCompatActivity {
                 Intent intent = new Intent(context, EditStudentActivity.class);
                 intent.putExtra("id", student.getId());
                 startActivity(intent);
+                finish();
             }
         });
         studentsListView.setAdapter(listAdapter);

@@ -1,5 +1,6 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper;
 
+import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.support.annotation.NonNull;
@@ -24,11 +25,11 @@ public class BottomNavigationViewHelper {
 
     private static final String TAG = "BottomNavigationViewHel";
 
-    public static void setupBottomNavigationView(final Context context, BottomNavigationViewEx bottomNavigationViewEx, int activityNum) {
+    public static void setupBottomNavigationView(final Activity activity, final Context context, BottomNavigationViewEx bottomNavigationViewEx, int activityNum) {
         Log.d(TAG, "setupBottomNavigationView: Setting up BottomNavigationView");
 
         setStyle(bottomNavigationViewEx);
-        enableNavigation(context, bottomNavigationViewEx);
+        enableNavigation(activity, context, bottomNavigationViewEx);
         setMenu(bottomNavigationViewEx, activityNum);
     }
 
@@ -41,7 +42,7 @@ public class BottomNavigationViewHelper {
         bottomNavigationViewEx.setPadding(0, 0, 0, 30);
     }
 
-    private static void enableNavigation(final Context context, BottomNavigationViewEx view) {
+    private static void enableNavigation(final Activity activity, final Context context, BottomNavigationViewEx view) {
         view.setOnNavigationItemSelectedListener(new BottomNavigationView.OnNavigationItemSelectedListener() {
             @Override
             public boolean onNavigationItemSelected(@NonNull MenuItem item) {
@@ -51,22 +52,22 @@ public class BottomNavigationViewHelper {
                     case R.id.navigation_students:
                         intent = new Intent(context, StudentsActivity.class);
                         context.startActivity(intent);
-                        return true;
-                    case R.id.navigation_add_student:
-                        intent = new Intent(context, AddStudentActivity.class);
-                        context.startActivity(intent);
+                        activity.finish();
                         return true;
                     case R.id.navigation_send_sms:
                         intent = new Intent(context, SendSMSActivity.class);
                         context.startActivity(intent);
+                        activity.finish();
                         return true;
                     case R.id.navigation_sms_history:
                         intent = new Intent(context, SMSHistoryActivity.class);
                         context.startActivity(intent);
+                        activity.finish();
                         return true;
                     case R.id.navigation_preferences:
                         intent = new Intent(context, PreferencesActivity.class);
                         context.startActivity(intent);
+                        activity.finish();
                         return true;
                 }
                 return false;

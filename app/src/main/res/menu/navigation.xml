@@ -7,11 +7,6 @@
         android:title="@string/title_students" />
 
     <item
-        android:id="@+id/navigation_add_student"
-        android:icon="@drawable/ic_person_add_black_24dp"
-        android:title="@string/title_add_student" />
-
-    <item
         android:id="@+id/navigation_send_sms"
         android:icon="@drawable/ic_mail_black_24dp"
         android:title="@string/title_send_sms" />

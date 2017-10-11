@@ -171,6 +171,12 @@ public class DBHandler extends SQLiteOpenHelper {
         db.close();
     }
 
+    public void deleteSMS(Long id) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(SMS_TABLE_NAME, SMS_ID + " =? ", new String[]{Long.toString(id)});
+        db.close();
+    }
+
     public void deletePendingWeeklySMS() {
         SQLiteDatabase db = this.getWritableDatabase();
 

@@ -40,7 +40,7 @@ import java.util.Date;
 public class SendSMSActivity extends AppCompatActivity {
 
     private static final String TAG = "SendSMSActivity";
-    private static final int ACTIVITY_NUM = 2;
+    private static final int ACTIVITY_NUM = 1;
     private static final int MY_PERMISSIONS_REQUEST_SEND_SMS = 1;
     private static final int MY_PERMISSIONS_REQUEST_READ_PHONE_STATE = 2;
     private static final int MY_PERMISSIONS_RECEIVE_BOOT_COMPLETED = 3;
@@ -62,7 +62,7 @@ public class SendSMSActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(SendSMSActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, SendSMSActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     public void showDateAndTimePickerDialog(View view) {
@@ -75,7 +75,7 @@ public class SendSMSActivity extends AppCompatActivity {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.SEND_SMS}, MY_PERMISSIONS_REQUEST_SEND_SMS);
         } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_PHONE_STATE) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_PHONE_STATE}, MY_PERMISSIONS_REQUEST_READ_PHONE_STATE);
-        } else if(ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_GRANTED) {
+        } else if (ContextCompat.checkSelfPermission(this, Manifest.permission.RECEIVE_BOOT_COMPLETED) != PackageManager.PERMISSION_GRANTED) {
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECEIVE_BOOT_COMPLETED}, MY_PERMISSIONS_RECEIVE_BOOT_COMPLETED);
         } else {
             String message = ((EditText) findViewById(R.id.sms_content_edit_text)).getText().toString();
@@ -86,6 +86,7 @@ public class SendSMSActivity extends AppCompatActivity {
 
                     Intent smsHistoryIntent = new Intent(SendSMSActivity.this, SMSHistoryActivity.class);
                     startActivity(smsHistoryIntent);
+                    finish();
                 } else {
                     Toast.makeText(this, R.string.you_need_to_set_the_time, Toast.LENGTH_SHORT).show();
                 }
@@ -244,7 +245,12 @@ public class SendSMSActivity extends AppCompatActivity {
 
                 Date buttonDate = new Date(time);
                 Button setDateAndTimeButton = getActivity().findViewById(R.id.set_date_and_time_button);
-                setDateAndTimeButton.setText(sdfButton.format(buttonDate));
+                //TODO: Doesn't work when only selected hour is bigger
+                if (time <= System.currentTimeMillis()) {
+                    setDateAndTimeButton.setText(R.string.time_now);
+                } else {
+                    setDateAndTimeButton.setText(sdfButton.format(buttonDate));
+                }
 
             } catch (ParseException e) {
                 e.printStackTrace();
@@ -276,5 +282,7 @@ public class SendSMSActivity extends AppCompatActivity {
             dateString.append(dayString).append(monthString).append(yearString).append(hourString).append(minuteString);
             return dateString.toString();
         }
+
+
     }
 }

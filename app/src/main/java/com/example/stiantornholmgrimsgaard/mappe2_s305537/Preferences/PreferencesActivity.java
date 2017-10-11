@@ -4,6 +4,7 @@ import android.app.Dialog;
 import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
+import android.content.Intent;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.text.Editable;
@@ -24,6 +25,7 @@ import android.widget.Toast;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMS;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistoryActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.WeeklySMSHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -33,7 +35,7 @@ import java.util.Calendar;
 public class PreferencesActivity extends AppCompatActivity {
 
     private static final String TAG = "PreferencesActivity";
-    private static final int ACTIVITY_NUM = 4;
+    private static final int ACTIVITY_NUM = 3;
 
     Spinner dayOfWeekSpinner;
     Button timePickerButton;
@@ -166,6 +168,10 @@ public class PreferencesActivity extends AppCompatActivity {
             saveWeeklySMSButton.setEnabled(false);
             saveWeeklySMSButton.setAlpha(0.5f);
             saveWeeklySMSButton.setText(getString(R.string.saved));
+
+            Intent intent = new Intent(PreferencesActivity.this, SMSHistoryActivity.class);
+            startActivity(intent);
+            finish();
         }
     }
 
@@ -227,7 +233,7 @@ public class PreferencesActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(PreferencesActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, PreferencesActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     public static class TimePickerFragment extends DialogFragment

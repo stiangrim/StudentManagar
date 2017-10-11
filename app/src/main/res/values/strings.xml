@@ -31,4 +31,5 @@
     <string name="radio_off">Radio off!</string>
     <string name="sms_delivered">SMS delivered!</string>
     <string name="sms_not_delivered">SMS not delivered!</string>
+    <string name="time_now">Time: Now</string>
 </resources>

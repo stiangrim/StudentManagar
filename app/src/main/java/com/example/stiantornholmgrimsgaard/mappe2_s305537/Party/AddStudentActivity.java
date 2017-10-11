@@ -5,17 +5,20 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistoryActivity;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.ViewSMSActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 public class AddStudentActivity extends AppCompatActivity {
 
     private static final String TAG = "AddStudentActivity";
-    private static final int ACTIVITY_NUM = 1;
+    private static final int ACTIVITY_NUM = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -23,13 +26,23 @@ public class AddStudentActivity extends AppCompatActivity {
         setContentView(R.layout.activity_add_student);
         Log.d(TAG, "onCreate: starting");
 
+        Button exitButton = (Button) findViewById(R.id.exit_button);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(AddStudentActivity.this, StudentsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         setupBottomNavigationView();
     }
 
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(AddStudentActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, AddStudentActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     public void addStudent(View view) {
@@ -46,6 +59,14 @@ public class AddStudentActivity extends AppCompatActivity {
 
             Intent intent = new Intent(this, StudentsActivity.class);
             startActivity(intent);
+            finish();
         }
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(AddStudentActivity.this, StudentsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

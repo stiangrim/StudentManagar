@@ -26,7 +26,7 @@ import java.util.Date;
 public class SMSHistoryActivity extends AppCompatActivity {
 
     private static final String TAG = "SMSHistoryActivity";
-    private static final int ACTIVITY_NUM = 3;
+    private static final int ACTIVITY_NUM = 2;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -41,7 +41,7 @@ public class SMSHistoryActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(SMSHistoryActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, SMSHistoryActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     private void setListView() {
@@ -51,34 +51,19 @@ public class SMSHistoryActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
                 SMS sms = (SMS) smsListView.getItemAtPosition(i);
-                showSMSDialog(sms);
+
+                Intent intent = new Intent(SMSHistoryActivity.this, ViewSMSActivity.class);
+                intent.setFlags(Intent.FLAG_ACTIVITY_SINGLE_TOP);
+                intent.putExtra("id", sms.getId());
+                startActivity(intent);
+                finish();
             }
         });
         smsListView.setAdapter(listAdapter);
     }
 
-    private void showSMSDialog(SMS sms) {
-        SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yy HH:mm");
-        Date resultDate = new Date(sms.getDate());
-
-        final AlertDialog.Builder builder = new AlertDialog.Builder(this);
-
-        builder.setMessage(sms.getMessage())
-                .setTitle(sdf.format(resultDate))
-                .setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialogInterface, int i) {
-                        dialogInterface.cancel();
-                    }
-                });
-
-        AlertDialog alertDialog = builder.create();
-        alertDialog.show();
-    }
-
     private SMS[] getSMS() {
         DBHandler dbHandler = new DBHandler(this);
-
         return dbHandler.getSMS().toArray(new SMS[0]);
     }
 }

@@ -5,6 +5,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
@@ -32,6 +33,16 @@ public class EditStudentActivity extends AppCompatActivity {
 
         setupBottomNavigationView();
 
+        Button exitButton = (Button) findViewById(R.id.exit_button);
+        exitButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                Intent intent = new Intent(EditStudentActivity.this, StudentsActivity.class);
+                startActivity(intent);
+                finish();
+            }
+        });
+
         firstName = (EditText) findViewById(R.id.edit_first_name_edit_text);
         lastName = (EditText) findViewById(R.id.edit_last_name_edit_text);
         phoneNumber = (EditText) findViewById(R.id.edit_phone_number_edit_text);
@@ -50,7 +61,7 @@ public class EditStudentActivity extends AppCompatActivity {
     private void setupBottomNavigationView() {
         Log.d(TAG, "setupBottomNavigationView: setting up bottomNavigationView");
         BottomNavigationViewEx bottomNavigationViewEx = (BottomNavigationViewEx) findViewById(R.id.navigation);
-        BottomNavigationViewHelper.setupBottomNavigationView(EditStudentActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
+        BottomNavigationViewHelper.setupBottomNavigationView(this, EditStudentActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
     public void updateStudent(View view) {
@@ -61,6 +72,7 @@ public class EditStudentActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, StudentsActivity.class);
         startActivity(intent);
+        finish();
     }
 
     public void deleteStudent(View view) {
@@ -68,5 +80,13 @@ public class EditStudentActivity extends AppCompatActivity {
 
         Intent intent = new Intent(this, StudentsActivity.class);
         startActivity(intent);
+        finish();
+    }
+
+    @Override
+    public void onBackPressed() {
+        Intent intent = new Intent(EditStudentActivity.this, StudentsActivity.class);
+        startActivity(intent);
+        finish();
     }
 }

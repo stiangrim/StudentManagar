@@ -50,9 +50,9 @@
             android:grantUriPermissions="true"
             android:multiprocess="true"
             android:readPermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider"
-            android:writePermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider">
-        </provider>
+            android:writePermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider" />
 
+        <activity android:name=".SMS.ViewSMSActivity"></activity>
     </application>
 
 </manifest>
