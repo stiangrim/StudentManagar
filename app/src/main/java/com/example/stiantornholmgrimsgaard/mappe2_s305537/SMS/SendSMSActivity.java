@@ -2,9 +2,11 @@ package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
 import android.Manifest;
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
+import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
@@ -82,7 +84,8 @@ public class SendSMSActivity extends AppCompatActivity {
 
             if (!message.isEmpty()) {
                 if (time != 0L) {
-                    saveSMSInDatabase(message);
+                    SMS sms = new SMS(time, message, false, false);
+                    startSMSService(sms);
 
                     Intent smsHistoryIntent = new Intent(SendSMSActivity.this, SMSHistoryActivity.class);
                     startActivity(smsHistoryIntent);
@@ -96,10 +99,18 @@ public class SendSMSActivity extends AppCompatActivity {
         }
     }
 
-    private void saveSMSInDatabase(String message) {
+    private void startSMSService(SMS sms) {
+        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+        final int _id = (int) System.currentTimeMillis();
+        Intent intent = new Intent(this, SMSService.class);
+        intent.putExtra("smsID", saveSMSInDatabase(sms));
+        PendingIntent pendingIntent = PendingIntent.getService(this, _id, intent, 0);
+        alarm.set(AlarmManager.RTC_WAKEUP, sms.getDate(), pendingIntent);
+    }
+
+    private long saveSMSInDatabase(SMS sms) {
         DBHandler dbHandler = new DBHandler(this);
-        SMS sms = new SMS(time, message, false, false);
-        dbHandler.addSMS(sms);
+        return dbHandler.addSMS(sms);
     }
 
     @Override

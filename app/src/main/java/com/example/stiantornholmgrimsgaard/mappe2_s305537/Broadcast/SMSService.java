@@ -29,6 +29,8 @@ public class SMSService extends Service {
     private PendingIntent deliveredPendingIntent;
     private DBHandler dbHandler;
 
+    //TODO: If you turn off the application before SMS has been sent, it is fucked up. Start broadcast right before finish()?
+
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -40,19 +42,13 @@ public class SMSService extends Service {
 
         if (PreferencesState.isSMSBroadcastEnabled(this)) {
             dbHandler = new DBHandler(this);
-            checkDatabaseForSMS();
+            Long _id = intent.getExtras().getLong("smsID");
+            SMS sms = dbHandler.getSMS(_id);
+            sendSMS(this, sms);
+            dbHandler.setSMSToSent(sms);
         }
 
         return super.onStartCommand(intent, flags, startId);
-    }
-
-    void checkDatabaseForSMS() {
-        for (SMS sms : dbHandler.getSMS()) {
-            if (!sms.isSent() && sms.getDate() <= System.currentTimeMillis()) {
-                sendSMS(this, sms);
-                dbHandler.setSMSToSent(sms);
-            }
-        }
     }
 
     void sendSMS(Context context, SMS sms) {

@@ -17,6 +17,7 @@ public class PreferencesState {
     private static final String WEEKLY_SMS_HOUR = "weeklySMSTime";
     private static final String WEEKLY_SMS_MINUTE = "weeklySMSMinute";
     private static final String WEEKLY_SMS_MESSAGE = "weeklySMSMessage";
+    private static final String SMS_ALARM_ID = "smsAlarmID";
 
 
     private static SharedPreferences getPreferences(Context context) {

@@ -18,7 +18,7 @@ import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 5;
+    public static final int DATABASE_VERSION = 6;
     public static final String DATABASE_NAME = "studentmanager.db";
     public static final String STUDENT_TABLE_NAME = "Student";
     public static final String STUDENT_ID = "_id";
@@ -67,7 +67,7 @@ public class DBHandler extends SQLiteOpenHelper {
         onCreate(db);
     }
 
-    public void addSMS(SMS sms) {
+    public long addSMS(SMS sms) {
         ContentValues contentValues = new ContentValues();
         contentValues.put(SMS_DATE, sms.getDate());
         contentValues.put(SMS_MESSAGE, sms.getMessage());
@@ -75,8 +75,9 @@ public class DBHandler extends SQLiteOpenHelper {
         contentValues.put(SMS_IS_WEEKLY, sms.isWeekly());
 
         SQLiteDatabase db = this.getWritableDatabase();
-        db.insert(SMS_TABLE_NAME, null, contentValues);
+        long _id = db.insert(SMS_TABLE_NAME, null, contentValues);
         db.close();
+        return _id;
     }
 
     public ArrayList<SMS> getSMS() {
@@ -143,6 +144,14 @@ public class DBHandler extends SQLiteOpenHelper {
             cursor.close();
             db.close();
         }
+
+        return sms;
+    }
+
+    public SMS getLastSMS() {
+        SMS sms = new SMS();
+
+
 
         return sms;
     }

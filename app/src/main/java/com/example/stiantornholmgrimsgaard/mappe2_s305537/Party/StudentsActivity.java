@@ -53,15 +53,8 @@ public class StudentsActivity extends AppCompatActivity {
             }
         });
 
-        startBroadcastReceiver();
         setupBottomNavigationView();
         setListView();
-    }
-
-    private void startBroadcastReceiver() {
-        Intent intent = new Intent();
-        intent.setAction("com.example.stiantornholmgrimsgaard.mappe2_s305537.SMSBroadcastReceiver");
-        sendBroadcast(intent);
     }
 
     private void setupBottomNavigationView() {
