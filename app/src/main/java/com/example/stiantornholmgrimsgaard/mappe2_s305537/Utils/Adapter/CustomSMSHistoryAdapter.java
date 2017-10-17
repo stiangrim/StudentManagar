@@ -32,10 +32,12 @@ public class CustomSMSHistoryAdapter extends ArrayAdapter<SMS> {
         LayoutInflater layoutInflater = LayoutInflater.from(getContext());
         View customView = layoutInflater.inflate(R.layout.custom_sms_history_listview_row, parent, false);
 
-        Long date = getItem(position).getDate();
+        SMS sms = getItem(position);
+
+        Long date = sms.getDate();
         TextView smsListDate = customView.findViewById(R.id.sms_list_date);
 
-        String message = getItem(position).getMessage();
+        String message = sms.getMessage();
         TextView smsListMessage = customView.findViewById(R.id.sms_list_message);
 
         ImageView smsListImage = customView.findViewById(R.id.sms_list_image);
@@ -45,7 +47,12 @@ public class CustomSMSHistoryAdapter extends ArrayAdapter<SMS> {
 
         smsListDate.setText(sdf.format(resultDate));
         smsListMessage.setText(message);
-        smsListImage.setImageResource(R.drawable.ic_sms);
+
+        if (sms.isSent()) {
+            smsListImage.setImageResource(R.drawable.ic_sms_green);
+        } else {
+            smsListImage.setImageResource(R.drawable.ic_sms_orange);
+        }
 
         return customView;
     }

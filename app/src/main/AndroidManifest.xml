@@ -31,9 +31,9 @@
         <activity android:name=".Preferences.PreferencesActivity" />
         <activity android:name=".SMS.SMSHistoryActivity" />
         <activity android:name=".Party.EditStudentActivity" />
+        <activity android:name=".SMS.ViewSMSActivity" />
 
         <service android:name=".Broadcast.SMSService" />
-        <service android:name=".Broadcast.SetPeriodicSMSService" />
 
         <receiver android:name=".Broadcast.SMSBroadcastReceiver">
             <intent-filter>
@@ -51,8 +51,6 @@
             android:multiprocess="true"
             android:readPermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider"
             android:writePermission="com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider" />
-
-        <activity android:name=".SMS.ViewSMSActivity"></activity>
     </application>
 
 </manifest>

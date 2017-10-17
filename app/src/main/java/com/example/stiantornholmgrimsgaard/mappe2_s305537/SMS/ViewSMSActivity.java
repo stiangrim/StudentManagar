@@ -1,14 +1,15 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Preferences.PreferencesState;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
@@ -20,11 +21,11 @@ public class ViewSMSActivity extends AppCompatActivity {
 
     private static final String TAG = "EditStudentActivity";
     private static final int ACTIVITY_NUM = 2;
-    DBHandler dbHandler;
-    SMS sms;
+    private DBHandler dbHandler;
+    private SMS sms;
 
-    EditText smsViewTimeEditText;
-    EditText smsViewContentEditText;
+    private EditText smsViewTimeEditText;
+    private EditText smsViewContentEditText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +60,9 @@ public class ViewSMSActivity extends AppCompatActivity {
 
     public void deleteSMS(View view) {
         dbHandler.deleteSMS(sms.getId());
+        if (sms.isWeekly() && !sms.isSent()) {
+            PreferencesState.setWeeklySMSEnabled(this, false);
+        }
         Intent intent = new Intent(ViewSMSActivity.this, SMSHistoryActivity.class);
         startActivity(intent);
         finish();

@@ -1,8 +1,8 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -18,12 +18,12 @@ public class EditStudentActivity extends AppCompatActivity {
     private static final String TAG = "EditStudentActivity";
     private static final int ACTIVITY_NUM = 0;
 
-    EditText firstName;
-    EditText lastName;
-    EditText phoneNumber;
+    private EditText firstName;
+    private EditText lastName;
+    private EditText phoneNumber;
 
-    Student student;
-    DBHandler dbHandler;
+    private Student student;
+    private DBHandler dbHandler;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,7 +55,9 @@ public class EditStudentActivity extends AppCompatActivity {
         lastName.setText(student.getLastName());
         phoneNumber.setText(student.getPhoneNumber());
 
-
+        firstName.setSelection(student.getFirstName().length());
+        lastName.setSelection(student.getLastName().length());
+        phoneNumber.setSelection(student.getPhoneNumber().length());
     }
 
     private void setupBottomNavigationView() {

@@ -23,14 +23,6 @@ public class SMS {
         this.isWeekly = isWeekly;
     }
 
-    public SMS(Long _id, Long date, String message, boolean isSent, boolean isWeekly) {
-        this._id = _id;
-        this.date = date;
-        this.message = message;
-        this.isSent = isSent;
-        this.isWeekly = isWeekly;
-    }
-
     public Long getId() {
         return _id;
     }

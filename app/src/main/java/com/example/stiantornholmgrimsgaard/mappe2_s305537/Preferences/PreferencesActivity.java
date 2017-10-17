@@ -5,8 +5,8 @@ import android.app.DialogFragment;
 import android.app.TimePickerDialog;
 import android.content.Context;
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
@@ -37,10 +37,10 @@ public class PreferencesActivity extends AppCompatActivity {
     private static final String TAG = "PreferencesActivity";
     private static final int ACTIVITY_NUM = 3;
 
-    Spinner dayOfWeekSpinner;
-    Button timePickerButton;
-    EditText weeklySMSContentEditText;
-    Button saveWeeklySMSButton;
+    private Spinner dayOfWeekSpinner;
+    private Button timePickerButton;
+    private EditText weeklySMSContentEditText;
+    private Button saveWeeklySMSButton;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,9 +56,15 @@ public class PreferencesActivity extends AppCompatActivity {
         setBroadcastSwitch();
         setWeeklySMSSwitch();
         setDayOfWeekSpinner();
-        timePickerButton.setText(PreferencesState.getWeeklySMSHour(this) + ":" + PreferencesState.getWeeklySMSMinute(this));
         setWeeklySMSContent();
         setupBottomNavigationView();
+
+        if (savedInstanceState != null) {
+            String time = savedInstanceState.getString("time");
+            timePickerButton.setText(time);
+        } else {
+            timePickerButton.setText(PreferencesState.getWeeklySMSHour(this) + ":" + PreferencesState.getWeeklySMSMinute(this));
+        }
     }
 
     public void openTimePickerDialog(View view) {
@@ -122,7 +128,9 @@ public class PreferencesActivity extends AppCompatActivity {
     }
 
     private void setWeeklySMSContent() {
-        weeklySMSContentEditText.setText(PreferencesState.getWeeklySMSMessage(this));
+        String weeklySMSContent = PreferencesState.getWeeklySMSMessage(this);
+        weeklySMSContentEditText.setText(weeklySMSContent);
+        weeklySMSContentEditText.setSelection(weeklySMSContent.length());
         final Context context = this;
         weeklySMSContentEditText.addTextChangedListener(new TextWatcher() {
             @Override
@@ -153,9 +161,9 @@ public class PreferencesActivity extends AppCompatActivity {
         String message = weeklySMSContentEditText.getText().toString();
 
         if (hour.equals(getString(R.string.select_time))) {
-            Toast.makeText(this, "Please set a time", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.please_set_a_time, Toast.LENGTH_SHORT).show();
         } else if (message.isEmpty()) {
-            Toast.makeText(this, "Message can not be empty", Toast.LENGTH_SHORT).show();
+            Toast.makeText(this, R.string.message_can_not_be_empty, Toast.LENGTH_SHORT).show();
         } else {
             PreferencesState.setWeeklySMSDayPosition(this, dayOfWeekSpinner.getSelectedItemPosition());
             PreferencesState.setWeeklySMSDay(this, day);
@@ -236,6 +244,13 @@ public class PreferencesActivity extends AppCompatActivity {
         BottomNavigationViewHelper.setupBottomNavigationView(this, PreferencesActivity.this, bottomNavigationViewEx, ACTIVITY_NUM);
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String time = timePickerButton.getText().toString();
+        outState.putString("time", time);
+    }
+
     public static class TimePickerFragment extends DialogFragment
             implements TimePickerDialog.OnTimeSetListener {
 
@@ -263,6 +278,9 @@ public class PreferencesActivity extends AppCompatActivity {
                 saveWeeklySMSButton.setAlpha(1);
                 saveWeeklySMSButton.setText(getActivity().getString(R.string.save_weekly_sms));
             }
+
+            PreferencesState.setWeeklySMSHour(getContext(), timeString.substring(0, 2));
+            PreferencesState.setWeeklySMSMinute(getContext(), timeString.substring(3, 5));
         }
 
         private String getTimeString(int hour, int minute) {

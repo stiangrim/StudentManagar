@@ -1,8 +1,8 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
 import android.content.Intent;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
@@ -10,8 +10,6 @@ import android.widget.EditText;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMSHistoryActivity;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.ViewSMSActivity;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -46,7 +44,6 @@ public class AddStudentActivity extends AppCompatActivity {
     }
 
     public void addStudent(View view) {
-
         DBHandler dbHandler = new DBHandler(this);
 
         String firstName = ((EditText) findViewById(R.id.first_name_edit_text)).getText().toString();

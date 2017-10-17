@@ -6,17 +6,14 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.IBinder;
 import android.telephony.SmsManager;
-import android.widget.Toast;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Preferences.PreferencesState;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMS;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.WeeklySMSHandler;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Calendar;
-import java.util.Locale;
 
 /**
  * Created by stiantornholmgrimsgaard on 06.10.2017.
@@ -29,8 +26,6 @@ public class SMSService extends Service {
     private PendingIntent deliveredPendingIntent;
     private DBHandler dbHandler;
 
-    //TODO: If you turn off the application before SMS has been sent, it is fucked up. Start broadcast right before finish()?
-
     @Override
     public IBinder onBind(Intent arg0) {
         return null;
@@ -38,17 +33,19 @@ public class SMSService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Toast.makeText(getApplicationContext(), "I SMSService", Toast.LENGTH_LONG).show();
-
         if (PreferencesState.isSMSBroadcastEnabled(this)) {
             dbHandler = new DBHandler(this);
-            Long _id = intent.getExtras().getLong("smsID");
-            SMS sms = dbHandler.getSMS(_id);
-            sendSMS(this, sms);
-            dbHandler.setSMSToSent(sms);
+            checkDatabase(this);
         }
-
         return super.onStartCommand(intent, flags, startId);
+    }
+
+    void checkDatabase(Context context) {
+        for (SMS sms : dbHandler.getSMS()) {
+            if (!sms.isSent() && sms.getDate() <= System.currentTimeMillis()) {
+                sendSMS(context, sms);
+            }
+        }
     }
 
     void sendSMS(Context context, SMS sms) {
@@ -57,6 +54,12 @@ public class SMSService extends Service {
         deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(DELIVERED), 0);
 
         sendSMSToAllStudents(smsManager, sms.getMessage());
+        dbHandler.setSMSToSent(sms);
+
+        if (sms.isWeekly()) {
+            WeeklySMSHandler weeklySMSHandler = new WeeklySMSHandler();
+            weeklySMSHandler.addNextSMS(context, sms);
+        }
     }
 
     private void sendSMSToAllStudents(SmsManager smsManager, String message) {

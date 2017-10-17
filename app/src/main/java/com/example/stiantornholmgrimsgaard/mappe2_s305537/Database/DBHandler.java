@@ -18,26 +18,26 @@ import java.util.ArrayList;
 
 public class DBHandler extends SQLiteOpenHelper {
 
-    public static final int DATABASE_VERSION = 6;
-    public static final String DATABASE_NAME = "studentmanager.db";
     public static final String STUDENT_TABLE_NAME = "Student";
     public static final String STUDENT_ID = "_id";
-    public static final String STUDENT_FIRST_NAME = "firstName";
-    public static final String STUDENT_LAST_NAME = "lastName";
-    public static final String STUDENT_PHONE_NUMBER = "phoneNumber";
-    public static final String SMS_TABLE_NAME = "Sms";
-    public static final String SMS_ID = "_id";
-    public static final String SMS_DATE = "date";
-    public static final String SMS_MESSAGE = "message";
-    public static final String SMS_IS_SENT = "is_sent";
-    public static final String SMS_IS_WEEKLY = "is_weekly";
-    public static final String CREATE_STUDENT_TABLE = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
+    private static final int DATABASE_VERSION = 6;
+    private static final String DATABASE_NAME = "studentmanager.db";
+    private static final String STUDENT_FIRST_NAME = "firstName";
+    private static final String STUDENT_LAST_NAME = "lastName";
+    private static final String STUDENT_PHONE_NUMBER = "phoneNumber";
+    private static final String SMS_TABLE_NAME = "Sms";
+    private static final String SMS_ID = "_id";
+    private static final String SMS_DATE = "date";
+    private static final String SMS_MESSAGE = "message";
+    private static final String SMS_IS_SENT = "is_sent";
+    private static final String SMS_IS_WEEKLY = "is_weekly";
+    private static final String CREATE_STUDENT_TABLE = "CREATE TABLE " + STUDENT_TABLE_NAME + "(" +
             STUDENT_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             STUDENT_FIRST_NAME + " TEXT," +
             STUDENT_LAST_NAME + " TEXT," +
             STUDENT_PHONE_NUMBER + " TEXT" +
             ");";
-    public static final String CREATE_SMS_TABLE = "CREATE TABLE " + SMS_TABLE_NAME + "(" +
+    private static final String CREATE_SMS_TABLE = "CREATE TABLE " + SMS_TABLE_NAME + "(" +
             SMS_ID + " INTEGER PRIMARY KEY AUTOINCREMENT," +
             SMS_DATE + " INTEGER," +
             SMS_MESSAGE + " TEXT," +
@@ -144,14 +144,6 @@ public class DBHandler extends SQLiteOpenHelper {
             cursor.close();
             db.close();
         }
-
-        return sms;
-    }
-
-    public SMS getLastSMS() {
-        SMS sms = new SMS();
-
-
 
         return sms;
     }

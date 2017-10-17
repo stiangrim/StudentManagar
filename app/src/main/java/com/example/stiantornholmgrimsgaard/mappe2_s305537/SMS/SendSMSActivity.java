@@ -2,23 +2,23 @@ package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
 import android.Manifest;
 import android.app.Activity;
-import android.app.AlarmManager;
 import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.app.DialogFragment;
-import android.app.PendingIntent;
 import android.app.TimePickerDialog;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.os.Bundle;
 import android.support.annotation.NonNull;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
 import android.telephony.SmsManager;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.view.View;
@@ -49,14 +49,51 @@ public class SendSMSActivity extends AppCompatActivity {
 
     private static long time = 0L;
 
-    BroadcastReceiver smsSentReceiver;
-    BroadcastReceiver smsDeliveredReceiver;
+    private BroadcastReceiver smsSentReceiver;
+    private BroadcastReceiver smsDeliveredReceiver;
+
+    private Button setDateAndTimeButton;
+    private Button sendSmsButton;
+    private EditText smsContent;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_send_sms);
         Log.d(TAG, "onCreate: starting");
+
+        setDateAndTimeButton = (Button) findViewById(R.id.set_date_and_time_button);
+        sendSmsButton = (Button) findViewById(R.id.send_sms_button);
+        smsContent = (EditText) findViewById(R.id.sms_content_edit_text);
+        smsContent.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                if (!smsContent.getText().toString().isEmpty() && !setDateAndTimeButton.getText().toString().equals(getString(R.string.set_date_and_time))) {
+                    sendSmsButton.setAlpha(1);
+                    sendSmsButton.setEnabled(true);
+                } else {
+                    sendSmsButton.setAlpha(0.25f);
+                    sendSmsButton.setEnabled(false);
+                }
+            }
+
+            @Override
+            public void afterTextChanged(Editable editable) {
+
+            }
+        });
+
+        if (savedInstanceState != null) {
+            String buttonText = savedInstanceState.getString("buttonText");
+            setDateAndTimeButton.setText(buttonText);
+            sendSmsButton.setAlpha(1);
+            sendSmsButton.setEnabled(true);
+        }
 
         setupBottomNavigationView();
     }
@@ -85,7 +122,7 @@ public class SendSMSActivity extends AppCompatActivity {
             if (!message.isEmpty()) {
                 if (time != 0L) {
                     SMS sms = new SMS(time, message, false, false);
-                    startSMSService(sms);
+                    sendBroadcast(sms);
 
                     Intent smsHistoryIntent = new Intent(SendSMSActivity.this, SMSHistoryActivity.class);
                     startActivity(smsHistoryIntent);
@@ -99,13 +136,11 @@ public class SendSMSActivity extends AppCompatActivity {
         }
     }
 
-    private void startSMSService(SMS sms) {
-        AlarmManager alarm = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
-        final int _id = (int) System.currentTimeMillis();
-        Intent intent = new Intent(this, SMSService.class);
+    private void sendBroadcast(SMS sms) {
+        Intent intent = new Intent();
         intent.putExtra("smsID", saveSMSInDatabase(sms));
-        PendingIntent pendingIntent = PendingIntent.getService(this, _id, intent, 0);
-        alarm.set(AlarmManager.RTC_WAKEUP, sms.getDate(), pendingIntent);
+        intent.setAction("com.example.stiantornholmgrimsgaard.mappe2_s305537.SMSBroadcastReceiver");
+        sendBroadcast(intent);
     }
 
     private long saveSMSInDatabase(SMS sms) {
@@ -184,6 +219,14 @@ public class SendSMSActivity extends AppCompatActivity {
         registerReceiver(smsDeliveredReceiver, new IntentFilter(SMSService.DELIVERED));
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        String buttonText = setDateAndTimeButton.getText().toString();
+
+        outState.putString("buttonText", buttonText);
+    }
+
     public static class DatePickerFragment extends DialogFragment
             implements DatePickerDialog.OnDateSetListener {
 
@@ -198,6 +241,7 @@ public class SendSMSActivity extends AppCompatActivity {
             // Create a new instance of DatePickerDialog and return it
             DatePickerDialog datePickerDialog = new DatePickerDialog(getActivity(), this, year, month, day);
             datePickerDialog.getDatePicker().setMinDate(System.currentTimeMillis());
+            datePickerDialog.setTitle("");
             return datePickerDialog;
         }
 
@@ -243,20 +287,23 @@ public class SendSMSActivity extends AppCompatActivity {
             // Do something with the time chosen by the user
 
             SimpleDateFormat sdf = new SimpleDateFormat("ddMMyyyyHHmm");
-            SimpleDateFormat sdfButton = new SimpleDateFormat("dd-MM-YY HH:mm");
+            SimpleDateFormat sdfButton = new SimpleDateFormat("dd-MM-yy HH:mm");
 
             try {
                 String dateString = getDateString(hourOfDay, minute);
                 Date date = sdf.parse(dateString);
                 time = date.getTime();
 
-                Button sendSmsButton = getActivity().findViewById(R.id.send_sms_button);
-                sendSmsButton.setAlpha(1);
-                sendSmsButton.setEnabled(true);
+                EditText smsContent = getActivity().findViewById(R.id.sms_content_edit_text);
+                if (!smsContent.getText().toString().isEmpty()) {
+                    Button sendSmsButton = getActivity().findViewById(R.id.send_sms_button);
+                    sendSmsButton.setAlpha(1);
+                    sendSmsButton.setEnabled(true);
+                }
 
                 Date buttonDate = new Date(time);
                 Button setDateAndTimeButton = getActivity().findViewById(R.id.set_date_and_time_button);
-                //TODO: Doesn't work when only selected hour is bigger
+
                 if (time <= System.currentTimeMillis()) {
                     setDateAndTimeButton.setText(R.string.time_now);
                 } else {
@@ -293,7 +340,5 @@ public class SendSMSActivity extends AppCompatActivity {
             dateString.append(dayString).append(monthString).append(yearString).append(hourString).append(minuteString);
             return dateString.toString();
         }
-
-
     }
 }

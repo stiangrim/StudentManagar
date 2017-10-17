@@ -1,11 +1,8 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS;
 
-import android.content.Context;
-import android.content.DialogInterface;
 import android.content.Intent;
-import android.support.v7.app.AlertDialog;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
@@ -13,15 +10,10 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.EditStudentActivity;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomSMSHistoryAdapter;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomSMSHistoryAdapter;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-import java.text.SimpleDateFormat;
-import java.util.Date;
 
 public class SMSHistoryActivity extends AppCompatActivity {
 

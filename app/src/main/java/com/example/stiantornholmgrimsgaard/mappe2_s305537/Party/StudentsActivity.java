@@ -1,12 +1,9 @@
 package com.example.stiantornholmgrimsgaard.mappe2_s305537.Party;
 
-import android.content.ContentValues;
 import android.content.Context;
 import android.content.Intent;
-import android.net.Uri;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.design.widget.Snackbar;
 import android.support.v7.app.AppCompatActivity;
 import android.util.Log;
 import android.view.View;
@@ -15,8 +12,8 @@ import android.widget.ListAdapter;
 import android.widget.ListView;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomStudentAdapter;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.R;
+import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomStudentAdapter;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
@@ -26,8 +23,8 @@ public class StudentsActivity extends AppCompatActivity {
     private static final int ACTIVITY_NUM = 0;
 
 
-    public static String PROVIDER = "com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider.StudentProvider";
-    public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/studentManager");
+    //public static String PROVIDER = "com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider.StudentProvider";
+    //public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/studentManager");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
