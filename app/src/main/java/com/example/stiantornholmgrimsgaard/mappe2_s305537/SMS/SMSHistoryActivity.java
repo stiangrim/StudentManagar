@@ -15,6 +15,8 @@ import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.Adapter.CustomSM
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.BottomNavigationViewHelper;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
+import java.util.ArrayList;
+
 public class SMSHistoryActivity extends AppCompatActivity {
 
     private static final String TAG = "SMSHistoryActivity";
@@ -51,11 +53,21 @@ public class SMSHistoryActivity extends AppCompatActivity {
                 finish();
             }
         });
+
         smsListView.setAdapter(listAdapter);
     }
 
     private SMS[] getSMS() {
         DBHandler dbHandler = new DBHandler(this);
-        return dbHandler.getSMS().toArray(new SMS[0]);
+
+        ArrayList<SMS> allSMS = dbHandler.getSMS();
+        for (SMS sms : allSMS) {
+            if(sms.isWeekly() && !sms.isSent()) {
+                allSMS.remove(sms);
+                allSMS.add(0, sms);
+            }
+        }
+
+        return allSMS.toArray(new SMS[0]);
     }
 }

@@ -54,6 +54,11 @@ public class CustomSMSHistoryAdapter extends ArrayAdapter<SMS> {
             smsListImage.setImageResource(R.drawable.ic_sms_orange);
         }
 
+        if(sms.isWeekly()) {
+            ImageView weeklySMSImage = customView.findViewById(R.id.weekly_sms_image);
+            weeklySMSImage.setImageResource(R.drawable.repetition);
+        }
+
         return customView;
     }
 }

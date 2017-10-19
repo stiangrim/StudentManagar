@@ -53,7 +53,6 @@ public class PreferencesActivity extends AppCompatActivity {
         weeklySMSContentEditText = (EditText) findViewById(R.id.weekly_sms_content_edit_text);
         saveWeeklySMSButton = (Button) findViewById(R.id.save_weekly_sms_button);
 
-        setBroadcastSwitch();
         setWeeklySMSSwitch();
         setDayOfWeekSpinner();
         setWeeklySMSContent();
@@ -70,17 +69,6 @@ public class PreferencesActivity extends AppCompatActivity {
     public void openTimePickerDialog(View view) {
         DialogFragment dialogFragment = new PreferencesActivity.TimePickerFragment();
         dialogFragment.show(getFragmentManager(), "timePicker");
-    }
-
-    private void setBroadcastSwitch() {
-        Switch broadcastOfSMSSwitch = (Switch) findViewById(R.id.broadcast_of_sms_switch);
-        broadcastOfSMSSwitch.setChecked(PreferencesState.isSMSBroadcastEnabled(this));
-        broadcastOfSMSSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(CompoundButton compoundButton, boolean checked) {
-                PreferencesState.setSMSBroadcastEnabled(PreferencesActivity.this, checked);
-            }
-        });
     }
 
     private void setWeeklySMSSwitch() {

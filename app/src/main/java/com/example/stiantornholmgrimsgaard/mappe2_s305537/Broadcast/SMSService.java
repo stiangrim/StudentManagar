@@ -9,7 +9,6 @@ import android.telephony.SmsManager;
 
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Database.DBHandler;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.Party.Student;
-import com.example.stiantornholmgrimsgaard.mappe2_s305537.Preferences.PreferencesState;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.SMS;
 import com.example.stiantornholmgrimsgaard.mappe2_s305537.SMS.WeeklySMSHandler;
 
@@ -33,14 +32,13 @@ public class SMSService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        if (PreferencesState.isSMSBroadcastEnabled(this)) {
-            dbHandler = new DBHandler(this);
-            checkDatabase(this);
-        }
+        dbHandler = new DBHandler(this);
+        checkDatabase(this);
+
         return super.onStartCommand(intent, flags, startId);
     }
 
-    void checkDatabase(Context context) {
+    private void checkDatabase(Context context) {
         for (SMS sms : dbHandler.getSMS()) {
             if (!sms.isSent() && sms.getDate() <= System.currentTimeMillis()) {
                 sendSMS(context, sms);
@@ -48,7 +46,7 @@ public class SMSService extends Service {
         }
     }
 
-    void sendSMS(Context context, SMS sms) {
+    private void sendSMS(Context context, SMS sms) {
         SmsManager smsManager = SmsManager.getDefault();
         sentPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(SENT), 0);
         deliveredPendingIntent = PendingIntent.getBroadcast(context, 0, new Intent(DELIVERED), 0);

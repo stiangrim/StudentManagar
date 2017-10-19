@@ -10,7 +10,6 @@ import android.content.SharedPreferences;
 public class PreferencesState {
 
     private static final String SHARED_PREFERENCES_NAME = "SMSPreferences";
-    private static final String SMS_BROADCAST_ENABLED = "smsBroadcastEnabled";
     private static final String WEEKLY_SMS_ENABLED = "weeklySMSEnabled";
     private static final String WEEKLY_SMS_DAY = "weeklySMSDay";
     private static final String WEEKLY_SMS_DAY_POSITION = "weeklySMSDayPosition";
@@ -21,16 +20,6 @@ public class PreferencesState {
 
     private static SharedPreferences getPreferences(Context context) {
         return context.getSharedPreferences(SHARED_PREFERENCES_NAME, Context.MODE_PRIVATE);
-    }
-
-    static void setSMSBroadcastEnabled(Context context, boolean input) {
-        SharedPreferences.Editor editor = getPreferences(context).edit();
-        editor.putBoolean(SMS_BROADCAST_ENABLED, input);
-        editor.apply();
-    }
-
-    public static boolean isSMSBroadcastEnabled(Context context) {
-        return getPreferences(context).getBoolean(SMS_BROADCAST_ENABLED, true);
     }
 
     public static void setWeeklySMSEnabled(Context context, boolean input) {

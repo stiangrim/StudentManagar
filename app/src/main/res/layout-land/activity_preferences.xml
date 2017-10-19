@@ -31,25 +31,10 @@
                 android:layout_height="45dp"
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
-                android:layout_marginTop="8dp"
-                android:background="@drawable/border"
-                android:elevation="2dp"
-                android:text="@string/enable_weekly_sms"
-                android:textSize="20sp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/broadcast_of_sms_switch" />
-
-            <Switch
-                android:id="@+id/broadcast_of_sms_switch"
-                android:layout_width="600dp"
-                android:layout_height="45dp"
-                android:layout_marginLeft="8dp"
-                android:layout_marginRight="8dp"
                 android:layout_marginTop="16dp"
                 android:background="@drawable/border"
                 android:elevation="2dp"
-                android:text="@string/enable_broadcast_of_sms"
+                android:text="@string/enable_weekly_sms"
                 android:textSize="20sp"
                 app:layout_constraintHorizontal_bias="0.481"
                 app:layout_constraintLeft_toLeftOf="parent"
@@ -59,7 +44,7 @@
             <Spinner
                 android:id="@+id/day_of_week_spinner"
                 android:layout_width="185dp"
-                android:layout_height="45dp"
+                android:layout_height="63dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/border"
@@ -71,7 +56,7 @@
             <Button
                 android:id="@+id/time_picker_button"
                 android:layout_width="185dp"
-                android:layout_height="48dp"
+                android:layout_height="63dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="9dp"
                 android:background="@drawable/border"
@@ -83,7 +68,7 @@
             <EditText
                 android:id="@+id/weekly_sms_content_edit_text"
                 android:layout_width="400dp"
-                android:layout_height="162dp"
+                android:layout_height="210dp"
                 android:layout_marginStart="22dp"
                 android:layout_marginTop="8dp"
                 android:layout_weight="0.04"
@@ -102,7 +87,7 @@
             <Button
                 android:id="@+id/save_weekly_sms_button"
                 android:layout_width="185dp"
-                android:layout_height="50dp"
+                android:layout_height="65dp"
                 android:layout_marginStart="15dp"
                 android:layout_marginTop="10dp"
                 android:background="@color/colorBlue"
