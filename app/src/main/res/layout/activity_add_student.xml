@@ -86,7 +86,7 @@
                 android:layout_marginLeft="8dp"
                 android:layout_marginRight="8dp"
                 android:layout_marginTop="35dp"
-                android:background="@color/colorBlue"
+                android:background="@color/colorSuccess"
                 android:onClick="addStudent"
                 android:text="@string/add_student"
                 android:textColor="@color/colorWhite"

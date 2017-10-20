@@ -22,23 +22,11 @@ public class StudentsActivity extends AppCompatActivity {
     private static final String TAG = "StudentsActivity";
     private static final int ACTIVITY_NUM = 0;
 
-
-    //public static String PROVIDER = "com.example.stiantornholmgrimsgaard.mappe2_s305537.ContentProvider.StudentProvider";
-    //public static final Uri CONTENT_URI = Uri.parse("content://" + PROVIDER + "/studentManager");
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_students);
         Log.d(TAG, "onCreate: starting");
-
-        // Insert contentValues using StudentProvider
-        /*ContentValues contentValues = new ContentValues();
-        contentValues.put("firstName", "Test");
-        contentValues.put("lastName", "Testesen");
-        contentValues.put("phoneNumber", "91695807");
-        getContentResolver().insert(CONTENT_URI, contentValues);*/
-
 
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.add_student_floating_button);
         fab.setOnClickListener(new View.OnClickListener() {
