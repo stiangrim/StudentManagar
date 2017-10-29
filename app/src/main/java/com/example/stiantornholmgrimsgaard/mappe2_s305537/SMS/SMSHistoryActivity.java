@@ -16,6 +16,7 @@ import com.example.stiantornholmgrimsgaard.mappe2_s305537.Utils.ViewHelper.Botto
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class SMSHistoryActivity extends AppCompatActivity {
 
@@ -61,10 +62,9 @@ public class SMSHistoryActivity extends AppCompatActivity {
         DBHandler dbHandler = new DBHandler(this);
 
         ArrayList<SMS> allSMS = dbHandler.getSMS();
-        for (SMS sms : allSMS) {
-            if(sms.isWeekly() && !sms.isSent()) {
-                allSMS.remove(sms);
-                allSMS.add(0, sms);
+        for (int i = 0; i < allSMS.size(); i++) {
+            if(allSMS.get(i).isWeekly() && !allSMS.get(i).isSent()) {
+                Collections.swap(allSMS, i, 0);
             }
         }
 
